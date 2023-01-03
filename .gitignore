@@ -50,3 +50,4 @@ dist/
 # Exclude Helm chart for this example
 /chart
 app/travel_processor/ui5-deploy.yamlxxxx
+dry-run.yaml
