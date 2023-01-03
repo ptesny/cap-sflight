@@ -2,7 +2,7 @@ global:
   # >>> Execute the following command to receive the domain:
   # $ kubectl get gateway -n kyma-system kyma-gateway -o jsonpath='{.spec.servers[0].hosts[0]}'
   # Remove the leading "*."
-  domain: c-81b58c5.kyma.shoot.live.k8s-hana.ondemand.com
+  domain: ""
   imagePullSecret:
     name: docker-registry-config
 hana_deployer:
