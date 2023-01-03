@@ -1,24 +1,3 @@
-global:
-  # >>> Execute the following command to receive the domain:
-  # $ kubectl get gateway -n kyma-system kyma-gateway -o jsonpath='{.spec.servers[0].hosts[0]}'
-  # Remove the leading "*."
-  domain: ""
-  imagePullSecret:
-    name: docker-registry-config
-hana_deployer:
-  image:
-    # >>> Replace <your-container-registry> with your container registry
-    repository: tiosouji/hc #### <your-container-registry>/sflight-hana-deployer
-    tag: hc-db ### latest
-  bindings:
-    hana:
-      fromSecret: sflight-db
-destinations:
-  serviceOfferingName: destination
-  servicePlanName: lite
-  parameters:
-    version: 1.0.0
-    HTML5Runtime_enabled: true
 html5_apps_deployer:
   cloudService: sap.fe.cap.sflight
   backendDestinations:
@@ -27,49 +6,4 @@ html5_apps_deployer:
   image:
     # >>> Replace <your-container-registry> with your container registry
     repository: tiosouji/hc #### <your-container-registry>/sflight-html5-deployer
-    tag: hc-html5 ### latest
-  resources:
-    limits:
-      cpu: 2000m
-      ephemeral-storage: 1G
-      memory: 2G
-    requests:
-      cpu: 1000m
-      ephemeral-storage: 1G
-      memory: 2G
-  bindings:
-    xsuaa:
-      serviceInstanceName: xsuaa
-    destination:
-      serviceInstanceName: destinations
-    html5_apps_repo:
-      serviceInstanceName: html5-apps-repo-host
-html5_apps_repo_host:
-  serviceOfferingName: html5-apps-repo
-  servicePlanName: app-host
-srv:
-  bindings:
-    uaa:
-      serviceInstanceName: xsuaa
-    db:
-      fromSecret: sflight-db
-  image:
-    # >>> Replace <your-container-registry> with your container registry
-    repository: tiosouji/hc #### <your-container-registry>/sflight-srv
-    tag: hc-srv ###latest
-  resources:
-    limits:
-      cpu: 2000m
-      ephemeral-storage: 1G
-      memory: 2G
-    requests:
-      cpu: 2000m
-      ephemeral-storage: 1G
-      memory: 2G
-  health_check:
-    liveness:
-      path: /
-    readiness:
-      path: /
-  env:
-    SPRING_PROFILES_ACTIVE: cloud
+    tag: hc-html5-200
