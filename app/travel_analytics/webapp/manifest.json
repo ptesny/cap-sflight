@@ -1,7 +1,7 @@
 {
     "_version": "1.42.0",
     "sap.app": {
-        "id": "sap.fe.cap.travel_analytics",
+        "id": "sap.fe.cap.travel-analytics-100",
         "type": "application",
         "title": "{{title}}",
         "description": "{{description}}",
@@ -205,9 +205,5 @@
     "sap.fiori": {
         "registrationIds": [],
         "archeType": "transactional"
-    },
-    "sap.cloud": {
-        "public": true,
-        "service": "sap.fe.cap.sflight"
     }
 }
