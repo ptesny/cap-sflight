@@ -52,22 +52,25 @@
       },
       "[development]": {
         "auth": {
-          "kind": "dummy-auth",
+          "kind": "mocked-auth",
           "users": {
             "rose": {
-              "password": "rose",
               "roles": []
             },
             "martha": {
-              "password": "martha",
               "roles": [
                 "reviewer"
               ]
             },
             "amy": {
-              "password": "amy",
               "roles": [
                 "processor"
+              ]
+            },
+            "admin": {
+              "password": "admin",
+              "roles": [
+                "admin"
               ]
             }
           }
@@ -78,7 +81,6 @@
       "service": true
     },
     "features": {
-      "preserve_computed": true,
       "odata_new_parser": true
     },
     "build": {
