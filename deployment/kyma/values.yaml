@@ -2,14 +2,14 @@ global:
   # >>> Execute the following command to receive the domain:
   # $ kubectl get gateway -n kyma-system kyma-gateway -o jsonpath='{.spec.servers[0].hosts[0]}'
   # Remove the leading "*."
-  domain: null
+  domain: c-81b58c5.kyma.shoot.live.k8s-hana.ondemand.com
   imagePullSecret:
-    name: container-registry
+    name: docker-registry-config
 hana_deployer:
   image:
     # >>> Replace <your-container-registry> with your container registry
-    repository: <your-container-registry>/sflight-hana-deployer
-    tag: latest
+    repository: tiosouji/hc #### <your-container-registry>/sflight-hana-deployer
+    tag: hc-db ### latest
   bindings:
     hana:
       fromSecret: sflight-db
@@ -22,12 +22,21 @@ destinations:
 html5_apps_deployer:
   cloudService: sap.fe.cap.sflight
   backendDestinations:
-    sflight-srv:
+    hc-srv: ### sflight-srv:
       service: srv
   image:
     # >>> Replace <your-container-registry> with your container registry
-    repository: <your-container-registry>/sflight-html5-deployer
-    tag: latest
+    repository: tiosouji/hc #### <your-container-registry>/sflight-html5-deployer
+    tag: hc-html5 ### latest
+  resources:
+    limits:
+      cpu: 2000m
+      ephemeral-storage: 1G
+      memory: 2G
+    requests:
+      cpu: 1000m
+      ephemeral-storage: 1G
+      memory: 2G
   bindings:
     xsuaa:
       serviceInstanceName: xsuaa
@@ -46,8 +55,8 @@ srv:
       fromSecret: sflight-db
   image:
     # >>> Replace <your-container-registry> with your container registry
-    repository: <your-container-registry>/sflight-srv
-    tag: latest
+    repository: tiosouji/hc #### <your-container-registry>/sflight-srv
+    tag: hc-srv ###latest
   resources:
     limits:
       cpu: 2000m
