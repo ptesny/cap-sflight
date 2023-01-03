@@ -44,7 +44,8 @@ for APP in app/*; do
         npm install
         npx ui5 build preload --clean-dest --config ui5-deploy.yaml --include-task=generateManifestBundle generateCachebusterInfo
         cd dist
-        rm manifest-bundle.zip
+        ## rm manifest-bundle.zip
+        mv manifest-bundle.zip manifest-bundle.xxx
         mv *.zip "$DIR/gen/ui/resources"
 
         popd >/dev/null

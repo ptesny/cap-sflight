@@ -1,7 +1,7 @@
 {
     "_version": "1.42.0",
     "sap.app": {
-        "id": "sap.fe.cap.travel-analytics-200",
+        "id": "sap.fe.cap.travel_analytics-200",
         "type": "application",
         "title": "{{title}}",
         "description": "{{description}}",
@@ -75,7 +75,7 @@
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
-                    "bundleName": "sap.fe.cap.travel-analytics.i18n.i18n"
+                    "bundleName": "sap.fe.cap.travel_analytics.i18n.i18n"
                 }
             },
             "": {
