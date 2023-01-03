@@ -26,7 +26,7 @@ mkdir -p gen/ui/resources
 CLOUD_SERVICE="sap.fe.cap.sflight" #### "$(value html5_apps_deployer.cloudService)"
 DESTINATIONS={\"hc-srv\":{\"service\":\"srv\"}} ###"$(value html5_apps_deployer.backendDestinations)"
 
-IMAGE="tiosouji/hc:hc-html5" ###"tiosouji/isveng:hc-app-default" #####"$(image html5_apps_deployer)"
+IMAGE="tiosouji/hc:hc-html5-200" ###"tiosouji/isveng:hc-app-default" #####"$(image html5_apps_deployer)"
 
 for APP in app/*; do
     if [ -f "$APP/webapp/manifest.json" ]; then

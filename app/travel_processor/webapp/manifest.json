@@ -1,7 +1,7 @@
 {
     "_version": "1.32.0",
     "sap.app": {
-        "id": "sap.fe.cap.travel-100",
+        "id": "sap.fe.cap.travel-200",
         "type": "application",
         "title": "{{title}}",
         "description": "{{description}}",
@@ -15,7 +15,7 @@
             "fallbackLocale": "en"
         },
         "applicationVersion": {
-            "version": "1.0.0"
+            "version": "2.0.0"
         },
         "dataSources": {
             "mainService": {
