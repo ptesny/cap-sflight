@@ -1,7 +1,7 @@
 {
   "_version": "1.42.0",
   "sap.app": {
-    "id": "sap.fe.cap.travel-analytics",
+    "id": "sap.fe.cap.travel-analytics-100",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
