@@ -16,14 +16,15 @@
     "travel-analytics": "cds watch --open travel_analytics/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "dependencies": {
-    "@sap/cds": ">=5.4.5",
-    "@sap/xssec": "^3.2.7",
+    "@sap/cds": ">=6.4.0",
+    "@sap/html5-app-deployer": "^4.2.2",
+    "@sap/xssec": "^3.2.14",
     "express": "^4",
-    "hdb": "^0.19.1",
+    "hdb": "^0.19.5",
     "passport": "^0.6.0"
   },
   "devDependencies": {
-    "@sap/ux-specification": "^1.102.9",
+    "@sap/ux-specification": "^1.102.14",
     "axios": "^1",
     "chai": "^4.3.0",
     "chai-as-promised": "^7.1.1",
@@ -39,7 +40,11 @@
       },
       "[production]": {
         "db": {
-          "kind": "hana-cloud"
+          "kind": "hana-cloud",
+          "pool": {
+            "max": 1400,
+            "min": 100
+          }
         },
         "auth": {
           "kind": "xsuaa"
