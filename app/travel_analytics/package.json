@@ -3,8 +3,8 @@
   "private": true,
   "main": "webapp/index.html",
   "engines": {
-    "node": ">=14",
-    "npm": ">=7"
+    "node": ">=16",
+    "npm": ">=8"
   },
   "scripts": {
     "deploy-config": "npx -p @sap/ux-ui5-tooling fiori add deploy-config cf",
@@ -21,7 +21,7 @@
   "devDependencies": {
 
     "@ui5/cli": "^2.14.14",
-    "ui5-middleware-simpleproxy": "^0.9.1",
+    "ui5-middleware-simpleproxy": "^0.9.2",
     "ui5-task-zipper": "^0.7.0"
 
   },
