@@ -82,7 +82,27 @@ Do the following steps if you want to deploy the **Node.js** application.
 The `CDS_ENV=node` env variable needs to be provided to build for Node.js. The application will be built for Java by default.
 
 ```
-CDS_ENV=node cds build --production
+export CDS_ENV=node 
+
+cds build --production
+
+[cds] - determining build tasks for project [~/GitHub/partnereng/cap-sflight].
+[cds] - the following build tasks will be executed
+[cds] -    {
+     "build": {
+       "target": "gen",
+       "tasks": [
+         {"for":"node-cf", "src":"srv", "options":{"model":["db","srv","app"]}},
+         {"for":"hana", "src":"db", "options":{"model":["db","srv","app"]}}
+       ]
+     }
+   }
+
+[cds] - building project [/Users/i049157/GitHub/partnereng/cap-sflight], clean [true]
+[cds] - cds [6.4.0], compiler [3.3.2], home [/Users/i049157/GitHub/partnereng/cap-sflight/node_modules/@sap/cds]
+
+[cds] - done > wrote output to:
+
 ```
 **Build data base deployer image:**
 
