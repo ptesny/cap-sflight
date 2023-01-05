@@ -91,6 +91,11 @@ pack build $YOUR_CONTAINER_REGISTRY/sflight-hana-deployer \
      --path gen/db \
      --buildpack gcr.io/paketo-buildpacks/nodejs:0.16.1 \
      --builder paketobuildpacks/builder:base
+
+pack build tiosouji/hc:hc-db \
+     --path gen/db \
+     --buildpack gcr.io/paketo-buildpacks/nodejs:0.16.1 \
+     --builder paketobuildpacks/builder:base     
 ```
 (Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
 
@@ -98,7 +103,14 @@ pack build $YOUR_CONTAINER_REGISTRY/sflight-hana-deployer \
 
 ```
 pack build \
-     $YOUR_CONTAINER_REGISTRY/sflight-srv \
+     $YOUR_CONTAINER_REGISTRY/hc-srv \
+     --path "gen/srv" \
+     --buildpack gcr.io/paketo-buildpacks/nodejs \
+     --builder paketobuildpacks/builder:base
+
+
+pack build \
+     tiosouji/hc:hc-srv \
      --path "gen/srv" \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
      --builder paketobuildpacks/builder:base
