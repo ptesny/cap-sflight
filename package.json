@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@sap/cds": ">=6.4.0",
-    "@sap/html5-app-deployer": "^4.2.2",
-    "@sap/xssec": "^3.2.14",
+    "@sap/html5-app-deployer": "^4.2.3",
+    "@sap/xssec": "^3.2.15",
     "express": "^4",
     "hdb": "^0.19.5",
     "passport": "^0.6.0"
