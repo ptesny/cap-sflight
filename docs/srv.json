@@ -1,0 +1,5862 @@
+{
+  "definitions": {
+    "AnalyticsService": {
+      "kind": "service",
+      "@path": "/analytics"
+    },
+    "AnalyticsService.Bookings": {
+      "kind": "entity",
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Booking"
+          ]
+        },
+        "columns": [
+          {
+            "ref": [
+              "BookingUUID"
+            ],
+            "as": "ID"
+          },
+          {
+            "ref": [
+              "to_Travel",
+              "TravelID"
+            ]
+          },
+          {
+            "ref": [
+              "BookingID"
+            ]
+          },
+          {
+            "xpr": [
+              {
+                "ref": [
+                  "to_Travel",
+                  "TravelID"
+                ]
+              },
+              "||",
+              {
+                "val": "/"
+              },
+              "||",
+              {
+                "ref": [
+                  "BookingID"
+                ]
+              }
+            ],
+            "as": "CombinedID",
+            "cast": {
+              "type": "cds.String"
+            }
+          },
+          {
+            "ref": [
+              "ConnectionID"
+            ]
+          },
+          {
+            "ref": [
+              "FlightDate"
+            ]
+          },
+          {
+            "val": "USD",
+            "as": "cuco",
+            "cast": {
+              "type": "cds.String",
+              "length": 3
+            }
+          },
+          {
+            "ref": [
+              "FlightPrice"
+            ],
+            "as": "price"
+          },
+          {
+            "ref": [
+              "BookingStatus",
+              "code"
+            ],
+            "as": "status"
+          },
+          {
+            "ref": [
+              "BookingStatus",
+              "name"
+            ],
+            "as": "statusName"
+          },
+          {
+            "ref": [
+              "to_Carrier",
+              "AirlineID"
+            ],
+            "as": "airline"
+          },
+          {
+            "ref": [
+              "to_Carrier",
+              "Name"
+            ],
+            "as": "airlineName"
+          },
+          {
+            "ref": [
+              "BookingDate"
+            ]
+          },
+          {
+            "ref": [
+              "to_Travel"
+            ]
+          },
+          {
+            "ref": [
+              "to_Carrier"
+            ]
+          },
+          {
+            "ref": [
+              "to_Flight"
+            ]
+          },
+          {
+            "ref": [
+              "to_Flight",
+              "PlaneType"
+            ]
+          },
+          {
+            "ref": [
+              "to_Flight",
+              "to_Connection",
+              "Distance"
+            ]
+          },
+          {
+            "ref": [
+              "to_Flight",
+              "to_Connection",
+              "DistanceUnit"
+            ]
+          },
+          {
+            "ref": [
+              "to_Flight",
+              "to_Connection",
+              "DepartureAirport",
+              "AirportID"
+            ],
+            "as": "DepAirport"
+          },
+          {
+            "ref": [
+              "to_Flight",
+              "to_Connection",
+              "DepartureAirport",
+              "City"
+            ],
+            "as": "DepCity"
+          },
+          {
+            "ref": [
+              "to_Flight",
+              "to_Connection",
+              "DestinationAirport",
+              "AirportID"
+            ],
+            "as": "DestAirport"
+          },
+          {
+            "ref": [
+              "to_Flight",
+              "to_Connection",
+              "DestinationAirport",
+              "City"
+            ],
+            "as": "DestCity"
+          }
+        ]
+      },
+      "elements": {
+        "ID": {
+          "@UI.Hidden": false,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "TravelID": {
+          "@readonly": true,
+          "type": "cds.Integer",
+          "default": {
+            "val": 0
+          }
+        },
+        "BookingID": {
+          "@Core.Computed": true,
+          "type": "cds.Integer"
+        },
+        "CombinedID": {
+          "@title": "Travel/Booking ID",
+          "@Core.Computed": true,
+          "type": "cds.String"
+        },
+        "ConnectionID": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "FlightDate": {
+          "type": "cds.Date"
+        },
+        "cuco": {
+          "@title": "{i18n>CurrencyCode}",
+          "@Core.Computed": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "price": {
+          "@Measures.ISOCurrency": {
+            "=": "cuco"
+          },
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "status": {
+          "@title": "{i18n>BookingStatus}",
+          "@Common.Text": {
+            "=": "statusName"
+          },
+          "@Common.TextArrangement": {
+            "#": "TextOnly"
+          },
+          "type": "cds.String",
+          "enum": {
+            "New": {
+              "val": "N"
+            },
+            "Booked": {
+              "val": "B"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          }
+        },
+        "statusName": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "airline": {
+          "@Common.Text": {
+            "=": "airlineName"
+          },
+          "type": "cds.String",
+          "length": 3
+        },
+        "airlineName": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "BookingDate": {
+          "type": "cds.Date"
+        },
+        "to_Travel": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.Travels",
+          "keys": [
+            {
+              "ref": [
+                "TravelUUID"
+              ]
+            }
+          ]
+        },
+        "to_Carrier": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.Airline",
+          "keys": [
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            }
+          ]
+        },
+        "to_Flight": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.Flight",
+          "on": [
+            {
+              "ref": [
+                "to_Flight",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "to_Carrier",
+                "AirlineID"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "to_Flight",
+                "FlightDate"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "FlightDate"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "to_Flight",
+                "ConnectionID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "ConnectionID"
+              ]
+            }
+          ]
+        },
+        "PlaneType": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "Distance": {
+          "@Common.Label": "{i18n>Distance}",
+          "@Measures.Unit": {
+            "=": "DistanceUnit"
+          },
+          "type": "cds.Integer"
+        },
+        "DistanceUnit": {
+          "type": "cds.String",
+          "length": 3
+        },
+        "DepAirport": {
+          "@Common.Label": "{i18n>DepartureAirport}",
+          "@Common.Text": {
+            "=": "DepCity"
+          },
+          "type": "cds.String",
+          "length": 3
+        },
+        "DepCity": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "DestAirport": {
+          "@Common.Label": "{i18n>ArrivalAirport}",
+          "@Common.Text": {
+            "=": "DestCity"
+          },
+          "type": "cds.String",
+          "length": 3
+        },
+        "DestCity": {
+          "type": "cds.String",
+          "length": 40
+        }
+      }
+    },
+    "AnalyticsService.Travels": {
+      "kind": "entity",
+      "@readonly": true,
+      "@Capabilities.FilterRestrictions.FilterExpressionRestrictions": [
+        {
+          "Property": "BeginDate",
+          "AllowedExpressions": "SingleRange"
+        },
+        {
+          "Property": "EndDate",
+          "AllowedExpressions": "SingleRange"
+        }
+      ],
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Travel"
+          ]
+        },
+        "columns": [
+          "*",
+          {
+            "xpr": [
+              {
+                "ref": [
+                  "to_Customer",
+                  "FirstName"
+                ]
+              },
+              "||",
+              {
+                "val": " "
+              },
+              "||",
+              {
+                "ref": [
+                  "to_Customer",
+                  "LastName"
+                ]
+              }
+            ],
+            "as": "CustomerName",
+            "cast": {
+              "type": "cds.String"
+            }
+          }
+        ]
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "TravelUUID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "TravelID": {
+          "@Common.Text": null,
+          "@readonly": true,
+          "type": "cds.Integer",
+          "default": {
+            "val": 0
+          }
+        },
+        "BeginDate": {
+          "type": "cds.Date"
+        },
+        "EndDate": {
+          "type": "cds.Date"
+        },
+        "BookingFee": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "TotalPrice": {
+          "@readonly": true,
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "AnalyticsService.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "Description": {
+          "type": "cds.String",
+          "length": 1024
+        },
+        "TravelStatus": {
+          "@readonly": true,
+          "type": "cds.Association",
+          "target": "AnalyticsService.TravelStatus",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "to_Agency": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.TravelAgency",
+          "keys": [
+            {
+              "ref": [
+                "AgencyID"
+              ]
+            }
+          ]
+        },
+        "to_Customer": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.Passenger",
+          "keys": [
+            {
+              "ref": [
+                "CustomerID"
+              ]
+            }
+          ]
+        },
+        "to_Booking": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "AnalyticsService.Bookings",
+          "on": [
+            {
+              "ref": [
+                "to_Booking",
+                "to_Travel"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "CustomerName": {
+          "@Common.Label": "{i18n>CustomerName}",
+          "@Core.Computed": true,
+          "type": "cds.String"
+        }
+      }
+    },
+    "TravelService": {
+      "kind": "service",
+      "@path": "/processor"
+    },
+    "TravelService.Travel": {
+      "kind": "entity",
+      "@restrict": [
+        {
+          "grant": "READ",
+          "to": "authenticated-user"
+        },
+        {
+          "grant": [
+            "rejectTravel",
+            "acceptTravel",
+            "deductDiscount"
+          ],
+          "to": "reviewer"
+        },
+        {
+          "grant": [
+            "*"
+          ],
+          "to": "processor"
+        },
+        {
+          "grant": [
+            "*"
+          ],
+          "to": "admin"
+        }
+      ],
+      "@Capabilities.FilterRestrictions.FilterExpressionRestrictions": [
+        {
+          "Property": "BeginDate",
+          "AllowedExpressions": "SingleRange"
+        },
+        {
+          "Property": "EndDate",
+          "AllowedExpressions": "SingleRange"
+        }
+      ],
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Travel"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "TravelUUID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "TravelID": {
+          "@readonly": true,
+          "type": "cds.Integer",
+          "default": {
+            "val": 0
+          }
+        },
+        "BeginDate": {
+          "type": "cds.Date"
+        },
+        "EndDate": {
+          "type": "cds.Date"
+        },
+        "BookingFee": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "TotalPrice": {
+          "@readonly": true,
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "TravelService.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "Description": {
+          "type": "cds.String",
+          "length": 1024
+        },
+        "TravelStatus": {
+          "@readonly": true,
+          "type": "cds.Association",
+          "target": "TravelService.TravelStatus",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "to_Agency": {
+          "type": "cds.Association",
+          "target": "TravelService.TravelAgency",
+          "keys": [
+            {
+              "ref": [
+                "AgencyID"
+              ]
+            }
+          ]
+        },
+        "to_Customer": {
+          "type": "cds.Association",
+          "target": "TravelService.Passenger",
+          "keys": [
+            {
+              "ref": [
+                "CustomerID"
+              ]
+            }
+          ]
+        },
+        "to_Booking": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "TravelService.Booking",
+          "on": [
+            {
+              "ref": [
+                "to_Booking",
+                "to_Travel"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      },
+      "actions": {
+        "createTravelByTemplate": {
+          "kind": "action",
+          "returns": {
+            "type": "TravelService.Travel"
+          }
+        },
+        "rejectTravel": {
+          "kind": "action"
+        },
+        "acceptTravel": {
+          "kind": "action"
+        },
+        "deductDiscount": {
+          "kind": "action",
+          "params": {
+            "percent": {
+              "@assert.range": [
+                1,
+                100
+              ],
+              "type": "Percentage",
+              "notNull": true
+            }
+          },
+          "returns": {
+            "type": "TravelService.Travel"
+          }
+        }
+      }
+    },
+    "Percentage": {
+      "kind": "type",
+      "@assert.range": [
+        1,
+        100
+      ],
+      "type": "cds.Integer"
+    },
+    "sap.fe.cap.travel.Travel": {
+      "kind": "entity",
+      "@Capabilities.FilterRestrictions.FilterExpressionRestrictions": [
+        {
+          "Property": "BeginDate",
+          "AllowedExpressions": "SingleRange"
+        },
+        {
+          "Property": "EndDate",
+          "AllowedExpressions": "SingleRange"
+        }
+      ],
+      "includes": [
+        "custom.managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "TravelUUID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "TravelID": {
+          "@readonly": true,
+          "type": "cds.Integer",
+          "default": {
+            "val": 0
+          }
+        },
+        "BeginDate": {
+          "type": "cds.Date"
+        },
+        "EndDate": {
+          "type": "cds.Date"
+        },
+        "BookingFee": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "TotalPrice": {
+          "@readonly": true,
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "sap.common.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "Description": {
+          "type": "cds.String",
+          "length": 1024
+        },
+        "TravelStatus": {
+          "@readonly": true,
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.TravelStatus",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "to_Agency": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.TravelAgency",
+          "keys": [
+            {
+              "ref": [
+                "AgencyID"
+              ]
+            }
+          ]
+        },
+        "to_Customer": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Passenger",
+          "keys": [
+            {
+              "ref": [
+                "CustomerID"
+              ]
+            }
+          ]
+        },
+        "to_Booking": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.fe.cap.travel.Booking",
+          "on": [
+            {
+              "ref": [
+                "to_Booking",
+                "to_Travel"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.fe.cap.travel.Booking": {
+      "kind": "entity",
+      "includes": [
+        "custom.managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "BookingUUID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "BookingID": {
+          "@Core.Computed": true,
+          "type": "cds.Integer"
+        },
+        "BookingDate": {
+          "type": "cds.Date"
+        },
+        "ConnectionID": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "FlightDate": {
+          "type": "cds.Date"
+        },
+        "FlightPrice": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "sap.common.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "BookingStatus": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.BookingStatus",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "to_BookSupplement": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.fe.cap.travel.BookingSupplement",
+          "on": [
+            {
+              "ref": [
+                "to_BookSupplement",
+                "to_Booking"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "to_Carrier": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Airline",
+          "keys": [
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            }
+          ]
+        },
+        "to_Customer": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Passenger",
+          "keys": [
+            {
+              "ref": [
+                "CustomerID"
+              ]
+            }
+          ]
+        },
+        "to_Travel": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Travel",
+          "keys": [
+            {
+              "ref": [
+                "TravelUUID"
+              ]
+            }
+          ]
+        },
+        "to_Flight": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Flight",
+          "on": [
+            {
+              "ref": [
+                "to_Flight",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "to_Carrier",
+                "AirlineID"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "to_Flight",
+                "FlightDate"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "FlightDate"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "to_Flight",
+                "ConnectionID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "ConnectionID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.fe.cap.travel.BookingSupplement": {
+      "kind": "entity",
+      "includes": [
+        "custom.managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "BookSupplUUID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "BookingSupplementID": {
+          "@Core.Computed": true,
+          "type": "cds.Integer"
+        },
+        "Price": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "sap.common.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "to_Booking": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Booking",
+          "keys": [
+            {
+              "ref": [
+                "BookingUUID"
+              ]
+            }
+          ]
+        },
+        "to_Travel": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Travel",
+          "keys": [
+            {
+              "ref": [
+                "TravelUUID"
+              ]
+            }
+          ]
+        },
+        "to_Supplement": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Supplement",
+          "keys": [
+            {
+              "ref": [
+                "SupplementID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.fe.cap.travel.BookingStatus": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "New": {
+              "val": "N"
+            },
+            "Booked": {
+              "val": "B"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.fe.cap.travel.BookingStatus.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.BookingStatus.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.fe.cap.travel.TravelStatus": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Open": {
+              "val": "O"
+            },
+            "Accepted": {
+              "val": "A"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          },
+          "default": {
+            "val": "O"
+          }
+        },
+        "criticality": {
+          "type": "cds.Integer"
+        },
+        "fieldControl": {
+          "@odata.Type": "Edm.Byte",
+          "type": "cds.Integer"
+        },
+        "createDeleteHidden": {
+          "type": "cds.Boolean"
+        },
+        "insertDeleteRestriction": {
+          "type": "cds.Boolean"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.fe.cap.travel.TravelStatus.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.TravelStatus.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "custom.managed": {
+      "kind": "aspect",
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        }
+      }
+    },
+    "sap.fe.cap.travel.MasterData": {
+      "kind": "aspect",
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "elements": {}
+    },
+    "sap.fe.cap.travel.Airline": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "includes": [
+        "sap.fe.cap.travel.MasterData"
+      ],
+      "elements": {
+        "AirlineID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "Name": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "sap.common.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "AirlinePicURL": {
+          "@UI.IsImageURL": true,
+          "type": "cds.String"
+        }
+      }
+    },
+    "sap.fe.cap.travel.Airport": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "includes": [
+        "sap.fe.cap.travel.MasterData"
+      ],
+      "elements": {
+        "AirportID": {
+          "@Common.Text": {
+            "=": "City"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "Name": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "City": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CountryCode": {
+          "@title": "{i18n>Country}",
+          "@description": "{i18n>CountryCode.Description}",
+          "type": "Country",
+          "target": "sap.common.Countries",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.fe.cap.travel.Supplement": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "includes": [
+        "custom.managed",
+        "sap.fe.cap.travel.MasterData"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "SupplementID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 10
+        },
+        "Price": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "Type": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.SupplementType",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "Description": {
+          "localized": true,
+          "type": "cds.String",
+          "length": 1024
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "sap.common.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.fe.cap.travel.Supplement.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "SupplementID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "SupplementID"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Supplement.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "SupplementID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "SupplementID"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.fe.cap.travel.Flight": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "includes": [
+        "sap.fe.cap.travel.MasterData"
+      ],
+      "elements": {
+        "AirlineID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "FlightDate": {
+          "key": true,
+          "type": "cds.Date"
+        },
+        "ConnectionID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 4
+        },
+        "Price": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "sap.common.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "PlaneType": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "MaximumSeats": {
+          "type": "cds.Integer"
+        },
+        "OccupiedSeats": {
+          "type": "cds.Integer"
+        },
+        "to_Airline": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Airline",
+          "on": [
+            {
+              "ref": [
+                "to_Airline",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            }
+          ]
+        },
+        "to_Connection": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.FlightConnection",
+          "on": [
+            {
+              "ref": [
+                "to_Connection",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "to_Connection",
+                "ConnectionID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "ConnectionID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.fe.cap.travel.FlightConnection": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "includes": [
+        "sap.fe.cap.travel.MasterData"
+      ],
+      "elements": {
+        "ConnectionID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 4
+        },
+        "AirlineID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "DepartureAirport": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Airport",
+          "keys": [
+            {
+              "ref": [
+                "AirportID"
+              ]
+            }
+          ]
+        },
+        "DestinationAirport": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Airport",
+          "keys": [
+            {
+              "ref": [
+                "AirportID"
+              ]
+            }
+          ]
+        },
+        "DepartureTime": {
+          "type": "cds.Time"
+        },
+        "ArrivalTime": {
+          "type": "cds.Time"
+        },
+        "Distance": {
+          "@Common.Label": "{i18n>Distance}",
+          "@Measures.Unit": {
+            "=": "DistanceUnit"
+          },
+          "type": "cds.Integer"
+        },
+        "DistanceUnit": {
+          "type": "cds.String",
+          "length": 3
+        },
+        "to_Airline": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.Airline",
+          "on": [
+            {
+              "ref": [
+                "to_Airline",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.fe.cap.travel.Passenger": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "includes": [
+        "custom.managed",
+        "sap.fe.cap.travel.MasterData"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "CustomerID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 6
+        },
+        "FirstName": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "LastName": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Title": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "Street": {
+          "type": "cds.String",
+          "length": 60
+        },
+        "PostalCode": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "City": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CountryCode": {
+          "@title": "{i18n>Country}",
+          "@description": "{i18n>CountryCode.Description}",
+          "type": "Country",
+          "target": "sap.common.Countries",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "PhoneNumber": {
+          "type": "cds.String",
+          "length": 30
+        },
+        "EMailAddress": {
+          "type": "cds.String",
+          "length": 256
+        }
+      }
+    },
+    "sap.fe.cap.travel.TravelAgency": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "includes": [
+        "sap.fe.cap.travel.MasterData"
+      ],
+      "elements": {
+        "AgencyID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 6
+        },
+        "Name": {
+          "type": "cds.String",
+          "length": 80
+        },
+        "Street": {
+          "type": "cds.String",
+          "length": 60
+        },
+        "PostalCode": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "City": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CountryCode": {
+          "@title": "{i18n>Country}",
+          "@description": "{i18n>CountryCode.Description}",
+          "type": "Country",
+          "target": "sap.common.Countries",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "PhoneNumber": {
+          "type": "cds.String",
+          "length": 30
+        },
+        "EMailAddress": {
+          "type": "cds.String",
+          "length": 256
+        },
+        "WebAddress": {
+          "type": "cds.String",
+          "length": 256
+        }
+      }
+    },
+    "sap.fe.cap.travel.SupplementType": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Beverage": {
+              "val": "BV"
+            },
+            "Meal": {
+              "val": "ML"
+            },
+            "Luggage": {
+              "val": "LU"
+            },
+            "Extra": {
+              "val": "EX"
+            }
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.fe.cap.travel.SupplementType.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.fe.cap.travel.SupplementType.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "Language": {
+      "kind": "type",
+      "@title": "{i18n>Language}",
+      "@description": "{i18n>LanguageCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Languages",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Currency": {
+      "kind": "type",
+      "@title": "{i18n>Currency}",
+      "@description": "{i18n>CurrencyCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Currencies",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Country": {
+      "kind": "type",
+      "@title": "{i18n>Country}",
+      "@description": "{i18n>CountryCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Countries",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "sap.common": {
+      "kind": "context"
+    },
+    "sap.common.Locale": {
+      "kind": "type",
+      "@title": "{i18n>LanguageCode}",
+      "type": "cds.String",
+      "length": 14
+    },
+    "sap.common.Languages": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Languages.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Languages.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Countries": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Currencies": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "symbol": {
+          "@title": "{i18n>CurrencySymbol}",
+          "type": "cds.String",
+          "length": 5
+        },
+        "numcode": {
+          "type": "cds.Integer"
+        },
+        "exponent": {
+          "type": "cds.Integer"
+        },
+        "minor": {
+          "type": "cds.String"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.CodeList": {
+      "kind": "aspect",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        }
+      }
+    },
+    "cuid": {
+      "kind": "aspect",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        }
+      }
+    },
+    "managed": {
+      "kind": "aspect",
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        }
+      }
+    },
+    "temporal": {
+      "kind": "aspect",
+      "elements": {
+        "validFrom": {
+          "@cds.valid.from": true,
+          "type": "cds.Timestamp"
+        },
+        "validTo": {
+          "@cds.valid.to": true,
+          "type": "cds.Timestamp"
+        }
+      }
+    },
+    "User": {
+      "kind": "type",
+      "@title": "{i18n>UserID}",
+      "@description": "{i18n>UserID.Description}",
+      "type": "cds.String",
+      "length": 255
+    },
+    "extensible": {
+      "kind": "aspect",
+      "elements": {
+        "extensions__": {
+          "@cds.api.ignore": true,
+          "type": "cds.String"
+        }
+      }
+    },
+    "sap.fe.cap.travel.BookingStatus.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "New": {
+              "val": "N"
+            },
+            "Booked": {
+              "val": "B"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          }
+        }
+      }
+    },
+    "sap.fe.cap.travel.TravelStatus.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Open": {
+              "val": "O"
+            },
+            "Accepted": {
+              "val": "A"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          },
+          "default": {
+            "val": "O"
+          }
+        }
+      }
+    },
+    "sap.fe.cap.travel.Supplement.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "SupplementID": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "length": 10
+        },
+        "Description": {
+          "localized": null,
+          "type": "cds.String",
+          "length": 1024
+        }
+      }
+    },
+    "sap.fe.cap.travel.SupplementType.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Beverage": {
+              "val": "BV"
+            },
+            "Meal": {
+              "val": "ML"
+            },
+            "Luggage": {
+              "val": "LU"
+            },
+            "Extra": {
+              "val": "EX"
+            }
+          }
+        }
+      }
+    },
+    "sap.common.Languages.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        }
+      }
+    },
+    "sap.common.Countries.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "sap.common.Currencies.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "AnalyticsService.Airline": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Airline"
+          ]
+        }
+      },
+      "elements": {
+        "AirlineID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "Name": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "AnalyticsService.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "AirlinePicURL": {
+          "@UI.IsImageURL": true,
+          "type": "cds.String"
+        }
+      }
+    },
+    "AnalyticsService.Flight": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Flight"
+          ]
+        }
+      },
+      "elements": {
+        "AirlineID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "FlightDate": {
+          "key": true,
+          "type": "cds.Date"
+        },
+        "ConnectionID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 4
+        },
+        "Price": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "AnalyticsService.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "PlaneType": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "MaximumSeats": {
+          "type": "cds.Integer"
+        },
+        "OccupiedSeats": {
+          "type": "cds.Integer"
+        },
+        "to_Airline": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.Airline",
+          "on": [
+            {
+              "ref": [
+                "to_Airline",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            }
+          ]
+        },
+        "to_Connection": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.FlightConnection",
+          "on": [
+            {
+              "ref": [
+                "to_Connection",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "to_Connection",
+                "ConnectionID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "ConnectionID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "AnalyticsService.Currencies": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.common.Currencies"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "symbol": {
+          "@title": "{i18n>CurrencySymbol}",
+          "type": "cds.String",
+          "length": 5
+        },
+        "numcode": {
+          "type": "cds.Integer"
+        },
+        "exponent": {
+          "type": "cds.Integer"
+        },
+        "minor": {
+          "type": "cds.String"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "AnalyticsService.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "AnalyticsService.TravelStatus": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.TravelStatus"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Open": {
+              "val": "O"
+            },
+            "Accepted": {
+              "val": "A"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          },
+          "default": {
+            "val": "O"
+          }
+        },
+        "criticality": {
+          "type": "cds.Integer"
+        },
+        "fieldControl": {
+          "@odata.Type": "Edm.Byte",
+          "type": "cds.Integer"
+        },
+        "createDeleteHidden": {
+          "type": "cds.Boolean"
+        },
+        "insertDeleteRestriction": {
+          "type": "cds.Boolean"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "AnalyticsService.TravelStatus.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.TravelStatus.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "AnalyticsService.TravelAgency": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.TravelAgency"
+          ]
+        }
+      },
+      "elements": {
+        "AgencyID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 6
+        },
+        "Name": {
+          "type": "cds.String",
+          "length": 80
+        },
+        "Street": {
+          "type": "cds.String",
+          "length": 60
+        },
+        "PostalCode": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "City": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CountryCode": {
+          "@title": "{i18n>Country}",
+          "@description": "{i18n>CountryCode.Description}",
+          "type": "Country",
+          "target": "AnalyticsService.Countries",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "PhoneNumber": {
+          "type": "cds.String",
+          "length": 30
+        },
+        "EMailAddress": {
+          "type": "cds.String",
+          "length": 256
+        },
+        "WebAddress": {
+          "type": "cds.String",
+          "length": 256
+        }
+      }
+    },
+    "AnalyticsService.Passenger": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Passenger"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "CustomerID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 6
+        },
+        "FirstName": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "LastName": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Title": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "Street": {
+          "type": "cds.String",
+          "length": 60
+        },
+        "PostalCode": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "City": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CountryCode": {
+          "@title": "{i18n>Country}",
+          "@description": "{i18n>CountryCode.Description}",
+          "type": "Country",
+          "target": "AnalyticsService.Countries",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "PhoneNumber": {
+          "type": "cds.String",
+          "length": 30
+        },
+        "EMailAddress": {
+          "type": "cds.String",
+          "length": 256
+        }
+      }
+    },
+    "TravelService.Currencies": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.common.Currencies"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "symbol": {
+          "@title": "{i18n>CurrencySymbol}",
+          "type": "cds.String",
+          "length": 5
+        },
+        "numcode": {
+          "type": "cds.Integer"
+        },
+        "exponent": {
+          "type": "cds.Integer"
+        },
+        "minor": {
+          "type": "cds.String"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "TravelService.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "TravelService.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TravelService.TravelStatus": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.TravelStatus"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Open": {
+              "val": "O"
+            },
+            "Accepted": {
+              "val": "A"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          },
+          "default": {
+            "val": "O"
+          }
+        },
+        "criticality": {
+          "type": "cds.Integer"
+        },
+        "fieldControl": {
+          "@odata.Type": "Edm.Byte",
+          "type": "cds.Integer"
+        },
+        "createDeleteHidden": {
+          "type": "cds.Boolean"
+        },
+        "insertDeleteRestriction": {
+          "type": "cds.Boolean"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "TravelService.TravelStatus.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "TravelService.TravelStatus.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TravelService.TravelAgency": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.TravelAgency"
+          ]
+        }
+      },
+      "elements": {
+        "AgencyID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 6
+        },
+        "Name": {
+          "type": "cds.String",
+          "length": 80
+        },
+        "Street": {
+          "type": "cds.String",
+          "length": 60
+        },
+        "PostalCode": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "City": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CountryCode": {
+          "@title": "{i18n>Country}",
+          "@description": "{i18n>CountryCode.Description}",
+          "type": "Country",
+          "target": "TravelService.Countries",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "PhoneNumber": {
+          "type": "cds.String",
+          "length": 30
+        },
+        "EMailAddress": {
+          "type": "cds.String",
+          "length": 256
+        },
+        "WebAddress": {
+          "type": "cds.String",
+          "length": 256
+        }
+      }
+    },
+    "TravelService.Passenger": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Passenger"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "CustomerID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 6
+        },
+        "FirstName": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "LastName": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Title": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "Street": {
+          "type": "cds.String",
+          "length": 60
+        },
+        "PostalCode": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "City": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CountryCode": {
+          "@title": "{i18n>Country}",
+          "@description": "{i18n>CountryCode.Description}",
+          "type": "Country",
+          "target": "TravelService.Countries",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "PhoneNumber": {
+          "type": "cds.String",
+          "length": 30
+        },
+        "EMailAddress": {
+          "type": "cds.String",
+          "length": 256
+        }
+      }
+    },
+    "TravelService.Booking": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Booking"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "BookingUUID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "BookingID": {
+          "@Core.Computed": true,
+          "type": "cds.Integer"
+        },
+        "BookingDate": {
+          "type": "cds.Date"
+        },
+        "ConnectionID": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "FlightDate": {
+          "type": "cds.Date"
+        },
+        "FlightPrice": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "TravelService.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "BookingStatus": {
+          "type": "cds.Association",
+          "target": "TravelService.BookingStatus",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "to_BookSupplement": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "TravelService.BookingSupplement",
+          "on": [
+            {
+              "ref": [
+                "to_BookSupplement",
+                "to_Booking"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "to_Carrier": {
+          "type": "cds.Association",
+          "target": "TravelService.Airline",
+          "keys": [
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            }
+          ]
+        },
+        "to_Customer": {
+          "type": "cds.Association",
+          "target": "TravelService.Passenger",
+          "keys": [
+            {
+              "ref": [
+                "CustomerID"
+              ]
+            }
+          ]
+        },
+        "to_Travel": {
+          "type": "cds.Association",
+          "target": "TravelService.Travel",
+          "keys": [
+            {
+              "ref": [
+                "TravelUUID"
+              ]
+            }
+          ]
+        },
+        "to_Flight": {
+          "type": "cds.Association",
+          "target": "TravelService.Flight",
+          "on": [
+            {
+              "ref": [
+                "to_Flight",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "to_Carrier",
+                "AirlineID"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "to_Flight",
+                "FlightDate"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "FlightDate"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "to_Flight",
+                "ConnectionID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "ConnectionID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "AnalyticsService.FlightConnection": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.FlightConnection"
+          ]
+        }
+      },
+      "elements": {
+        "ConnectionID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 4
+        },
+        "AirlineID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "DepartureAirport": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.Airport",
+          "keys": [
+            {
+              "ref": [
+                "AirportID"
+              ]
+            }
+          ]
+        },
+        "DestinationAirport": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.Airport",
+          "keys": [
+            {
+              "ref": [
+                "AirportID"
+              ]
+            }
+          ]
+        },
+        "DepartureTime": {
+          "type": "cds.Time"
+        },
+        "ArrivalTime": {
+          "type": "cds.Time"
+        },
+        "Distance": {
+          "@Common.Label": "{i18n>Distance}",
+          "@Measures.Unit": {
+            "=": "DistanceUnit"
+          },
+          "type": "cds.Integer"
+        },
+        "DistanceUnit": {
+          "type": "cds.String",
+          "length": 3
+        },
+        "to_Airline": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.Airline",
+          "on": [
+            {
+              "ref": [
+                "to_Airline",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "AnalyticsService.Currencies.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.common.Currencies.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "AnalyticsService.TravelStatus.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.TravelStatus.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Open": {
+              "val": "O"
+            },
+            "Accepted": {
+              "val": "A"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          },
+          "default": {
+            "val": "O"
+          }
+        }
+      }
+    },
+    "AnalyticsService.Countries": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.common.Countries"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "AnalyticsService.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "AnalyticsService.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TravelService.Currencies.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.common.Currencies.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "TravelService.TravelStatus.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.TravelStatus.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Open": {
+              "val": "O"
+            },
+            "Accepted": {
+              "val": "A"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          },
+          "default": {
+            "val": "O"
+          }
+        }
+      }
+    },
+    "TravelService.Countries": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.common.Countries"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "TravelService.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "TravelService.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TravelService.BookingStatus": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.BookingStatus"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "New": {
+              "val": "N"
+            },
+            "Booked": {
+              "val": "B"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "TravelService.BookingStatus.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "TravelService.BookingStatus.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TravelService.BookingSupplement": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.BookingSupplement"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "BookSupplUUID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "BookingSupplementID": {
+          "@Core.Computed": true,
+          "type": "cds.Integer"
+        },
+        "Price": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "TravelService.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "to_Booking": {
+          "type": "cds.Association",
+          "target": "TravelService.Booking",
+          "keys": [
+            {
+              "ref": [
+                "BookingUUID"
+              ]
+            }
+          ]
+        },
+        "to_Travel": {
+          "type": "cds.Association",
+          "target": "TravelService.Travel",
+          "keys": [
+            {
+              "ref": [
+                "TravelUUID"
+              ]
+            }
+          ]
+        },
+        "to_Supplement": {
+          "type": "cds.Association",
+          "target": "TravelService.Supplement",
+          "keys": [
+            {
+              "ref": [
+                "SupplementID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TravelService.Airline": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Airline"
+          ]
+        }
+      },
+      "elements": {
+        "AirlineID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "Name": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "TravelService.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "AirlinePicURL": {
+          "@UI.IsImageURL": true,
+          "type": "cds.String"
+        }
+      }
+    },
+    "TravelService.Flight": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Flight"
+          ]
+        }
+      },
+      "elements": {
+        "AirlineID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "FlightDate": {
+          "key": true,
+          "type": "cds.Date"
+        },
+        "ConnectionID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 4
+        },
+        "Price": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "TravelService.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "PlaneType": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "MaximumSeats": {
+          "type": "cds.Integer"
+        },
+        "OccupiedSeats": {
+          "type": "cds.Integer"
+        },
+        "to_Airline": {
+          "type": "cds.Association",
+          "target": "TravelService.Airline",
+          "on": [
+            {
+              "ref": [
+                "to_Airline",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            }
+          ]
+        },
+        "to_Connection": {
+          "type": "cds.Association",
+          "target": "TravelService.FlightConnection",
+          "on": [
+            {
+              "ref": [
+                "to_Connection",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "to_Connection",
+                "ConnectionID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "ConnectionID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "AnalyticsService.Airport": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Airport"
+          ]
+        }
+      },
+      "elements": {
+        "AirportID": {
+          "@Common.Text": {
+            "=": "City"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "Name": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "City": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CountryCode": {
+          "@title": "{i18n>Country}",
+          "@description": "{i18n>CountryCode.Description}",
+          "type": "Country",
+          "target": "AnalyticsService.Countries",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "AnalyticsService.Countries.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.common.Countries.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "TravelService.Countries.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.common.Countries.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "TravelService.BookingStatus.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.BookingStatus.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "New": {
+              "val": "N"
+            },
+            "Booked": {
+              "val": "B"
+            },
+            "Canceled": {
+              "val": "X"
+            }
+          }
+        }
+      }
+    },
+    "TravelService.Supplement": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Supplement"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "createdAt"
+            ]
+          }
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "createdBy"
+            ]
+          },
+          "length": 255
+        },
+        "LastChangedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedAt"
+            ]
+          }
+        },
+        "LastChangedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": {
+            "ref": [
+              "managed",
+              "modifiedBy"
+            ]
+          },
+          "length": 255
+        },
+        "SupplementID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 10
+        },
+        "Price": {
+          "type": "cds.Decimal",
+          "precision": 16,
+          "scale": 3
+        },
+        "Type": {
+          "type": "cds.Association",
+          "target": "TravelService.SupplementType",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "Description": {
+          "localized": true,
+          "type": "cds.String",
+          "length": 1024
+        },
+        "CurrencyCode": {
+          "@title": "{i18n>Currency}",
+          "@description": "{i18n>CurrencyCode.Description}",
+          "type": "Currency",
+          "target": "TravelService.Currencies",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "TravelService.Supplement.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "SupplementID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "SupplementID"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "TravelService.Supplement.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "SupplementID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "SupplementID"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TravelService.FlightConnection": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.FlightConnection"
+          ]
+        }
+      },
+      "elements": {
+        "ConnectionID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 4
+        },
+        "AirlineID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "DepartureAirport": {
+          "type": "cds.Association",
+          "target": "TravelService.Airport",
+          "keys": [
+            {
+              "ref": [
+                "AirportID"
+              ]
+            }
+          ]
+        },
+        "DestinationAirport": {
+          "type": "cds.Association",
+          "target": "TravelService.Airport",
+          "keys": [
+            {
+              "ref": [
+                "AirportID"
+              ]
+            }
+          ]
+        },
+        "DepartureTime": {
+          "type": "cds.Time"
+        },
+        "ArrivalTime": {
+          "type": "cds.Time"
+        },
+        "Distance": {
+          "@Common.Label": "{i18n>Distance}",
+          "@Measures.Unit": {
+            "=": "DistanceUnit"
+          },
+          "type": "cds.Integer"
+        },
+        "DistanceUnit": {
+          "type": "cds.String",
+          "length": 3
+        },
+        "to_Airline": {
+          "type": "cds.Association",
+          "target": "TravelService.Airline",
+          "on": [
+            {
+              "ref": [
+                "to_Airline",
+                "AirlineID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "AirlineID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TravelService.SupplementType": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.SupplementType"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Beverage": {
+              "val": "BV"
+            },
+            "Meal": {
+              "val": "ML"
+            },
+            "Luggage": {
+              "val": "LU"
+            },
+            "Extra": {
+              "val": "EX"
+            }
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "TravelService.SupplementType.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "TravelService.SupplementType.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TravelService.Supplement.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Supplement.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "SupplementID": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "length": 10
+        },
+        "Description": {
+          "localized": null,
+          "type": "cds.String",
+          "length": 1024
+        }
+      }
+    },
+    "TravelService.Airport": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@readonly": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.Airport"
+          ]
+        }
+      },
+      "elements": {
+        "AirportID": {
+          "@Common.Text": {
+            "=": "City"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "Name": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "City": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "CountryCode": {
+          "@title": "{i18n>Country}",
+          "@description": "{i18n>CountryCode.Description}",
+          "type": "Country",
+          "target": "TravelService.Countries",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TravelService.SupplementType.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "sap.fe.cap.travel.SupplementType.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Beverage": {
+              "val": "BV"
+            },
+            "Meal": {
+              "val": "ML"
+            },
+            "Luggage": {
+              "val": "LU"
+            },
+            "Extra": {
+              "val": "EX"
+            }
+          }
+        }
+      }
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v3.3.2",
+    "flavor": "inferred"
+  },
+  "$version": "2.0"
+}
