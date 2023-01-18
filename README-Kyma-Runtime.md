@@ -175,21 +175,22 @@ pack build $YOUR_CONTAINER_REGISTRY/sflight-srv \
 ```
 bash deployment/kyma/scripts/build-ui-image.sh
 ```
+## Retrieve the hc helm chat project
 
-## Push docker images
+https://github.tools.sap/fp-stakeholder-management/hana-cloud/tree/main/hc#usage
+
+### Push docker images
 
 You can push all the docker images to your docker registry, using:
 
 ```
-docker push $YOUR_CONTAINER_REGISTRY/sflight-hana-deployer
-docker push $YOUR_CONTAINER_REGISTRY/sflight-srv
-docker push $YOUR_CONTAINER_REGISTRY/sflight-html5-deployer
+make docker-push
 ```
 
-## Deployment
+### Deployment
 
 ```
-helm upgrade sflight ./chart --install -f deployment/kyma/values.yaml
+make helm-deploy
 ```
 
 ## Access the UI
