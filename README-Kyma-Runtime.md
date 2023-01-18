@@ -175,9 +175,11 @@ pack build $YOUR_CONTAINER_REGISTRY/sflight-srv \
 ```
 bash deployment/kyma/scripts/build-ui-image.sh
 ```
-## Retrieve the hc helm chat project
 
-https://github.tools.sap/fp-stakeholder-management/hana-cloud/tree/main/hc#usage
+--------------------
+
+The below requires access to an internal repo;
+
 
 ### Push docker images
 
